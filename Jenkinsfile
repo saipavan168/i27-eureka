@@ -32,7 +32,9 @@ pipeline{
                 }
             }
             stage(check){
-                echo " actual artifact: i27-${env.APPLICATION}-${env.POM_VERSION}-${env.POM_PACKAGING}"
+                steps{
+                  echo " actual artifact: i27-${env.APPLICATION}-${env.POM_VERSION}-${env.POM_PACKAGING}"
+                }
             }
         }
     }
