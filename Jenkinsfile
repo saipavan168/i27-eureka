@@ -4,9 +4,10 @@ pipeline{
     }
     environment{
        APPLICATION_NAME= 'eureka'
-       POM_VERSION= readMavenPom().getVersion();
-       POM_PACKAGING= readMavenPom().getPackaging();
+       POM_VERSION= readMavenPom().getVersion()
+       POM_PACKAGING= readMavenPom().getPackaging()
        DOCKER_CREDS = credentials('dockerhub')
+       DOCKER_HUB= "docker.io/raksharoshni"
 
     }
     tools{
