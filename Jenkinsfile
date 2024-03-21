@@ -43,7 +43,7 @@ pipeline{
                      ls -la
                      cp ${workspace}/target/i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} ./.cicd
                      ls -la ./.cicd
-                     docker build --build-arg JAR_SRC=i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} -t ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT} ./.cicd
+                     docker build --build-arg JAR_SRC= i27-eureka-0.0.1-SNAPSHOT.jar -t ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT} ./.cicd
                      docker images
                      docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}
                      docker push ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}
