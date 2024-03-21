@@ -43,7 +43,7 @@ pipeline{
                      ls -la
                      cp ${workspace}/target/i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} ./.cicd
                      ls -la ./.cicd
-                     docker build -dit -t ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT} ./.cicd
+                     docker build  -t ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT} ./.cicd
                      docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}
                      docker push ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}
 
