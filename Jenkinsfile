@@ -4,7 +4,8 @@ pipeline{
     }
     environment{
        APPLICATION_NAME= 'eureka'
-       POM_VERSION= readMavenPom().getVersion()
+       POM_VERSION= readMavenPom().getVersion();
+       POM_PACKAGING= readMavenPom().getPackaging();
 
     }
     tools{
@@ -29,6 +30,9 @@ pipeline{
                 steps{
                     sh "ls /home/raksharoshni/jenkins/workspace/1project_master/target/*.jar"
                 }
+            }
+            stage(check){
+                echo " actual artifact: i27-${env.APPLICATION}-${env.POM_VERSION}-${env.POM_PACKAGING}"
             }
         }
     }
