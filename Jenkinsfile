@@ -27,7 +27,7 @@ pipeline{
             }
             stage(artifactorycheck){
                 steps{
-                    sh "cat /home/raksharoshni/jenkins/workspace/1project_master/target/*.jar"
+                    sh "ls /home/raksharoshni/jenkins/workspace/1project_master/target/*.jar"
                 }
             }
         }
