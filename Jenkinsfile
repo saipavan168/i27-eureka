@@ -3,7 +3,7 @@ pipeline{
         label 'k8s-node'
     }
     environment{
-       APPLICATION_NAME= eureka
+       APPLICATION_NAME= 'eureka'
        POM_VERSION= readMavenPom().getVersion()
 
     }
