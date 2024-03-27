@@ -36,16 +36,6 @@ pipeline {
             }
         }
 
-        stage ('Docker Format') {
-            steps {
-                // Tell me, how can i read a pom.xml from jenkinfile
-                echo "Actual Format: ${env.APPLICATION_NAME}-${env.POM_VERSION}-${env.POM_PACKAGING}"
-                // need to have below formating 
-                // eureka-buildnumber-brnachname.paackaging
-                //eureka-06-master.jar
-                echo "Custom Format: ${env.APPLICATION_NAME}-${currentBuild.number}-${BRANCH_NAME}.${env.POM_PACKAGING}"
-            }
-        }
         stage ('Docker Build and Push') {
             steps {
                 // doker build -t name: tag 
@@ -71,7 +61,7 @@ pipeline {
                 }
             }
         }
-        stage ('Deploy to Test') {
+      /*  stage ('Deploy to Test') {
             steps {
                 script {
                     echo "***** Entering Test Environment *****"
@@ -92,7 +82,7 @@ pipeline {
                     dockerDeploy('prod', '8761', '8761').call()
                 }
             }
-        }
+        }*/
 
     }
 }
