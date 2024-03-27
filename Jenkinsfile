@@ -56,7 +56,7 @@ pipeline{
             stage('deploy'){
              steps {
                 script{
-                    dockerDeploy('dev','6761','8761').call()
+                    dockerDeploy().call()
                     echo "deployed successfull in dev"
                 }
              }
@@ -65,34 +65,9 @@ pipeline{
 }
 
 
- def dockerDeploy(env, hostport, containerport){
+ def dockerDeploy( ){
         return {
-            echo "**************Deploying app to $env Environment***************"
-                withCredentials([usernamePassword(credentialsId: 'docker_vm_maha_user', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-              // some block
-                script {
-                    // Pull the image on the Docker Server
-                    sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
-                    
-                    try {
-                        // Stop the Container
-                        echo "Stoping the Container"
-                        sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker stop ${env.APPLICATION_NAME}-$env"
-
-                        // Remove the Container 
-                        echo "Removing the Container"
-                        sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker rm ${env.APPLICATION_NAME}-$env"
-                        } catch(err) {
-                        echo "Caught the Error: $err"
-                        }
-
-                    // Create a Container 
-                    echo "Creating the Container"
-                    sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker run -d -p $hostport:$containerport --name ${env.APPLICATION_NAME}-$env ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
-                    }
-  
-
-                 }
+                echo "${env.APPLICATION_NAME}"
              }
         
         
@@ -120,7 +95,32 @@ pipeline{
                 }
             }            
         }
+echo "**************Deploying app to $env Environment***************"
+                withCredentials([usernamePassword(credentialsId: 'docker_vm_maha_user', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+              // some block
+                script {
+                    // Pull the image on the Docker Server
+                    sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
+                    
+                    try {
+                        // Stop the Container
+                        echo "Stoping the Container"
+                        sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker stop ${env.APPLICATION_NAME}-$env"
 
+                        // Remove the Container 
+                        echo "Removing the Container"
+                        sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker rm ${env.APPLICATION_NAME}-$env"
+                        } catch(err) {
+                        echo "Caught the Error: $err"
+                        }
+
+                    // Create a Container 
+                    echo "Creating the Container"
+                    sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker run -d -p $hostport:$containerport --name ${env.APPLICATION_NAME}-$env ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
+                    }
+  
+
+                 }
 
 } */
 /*
