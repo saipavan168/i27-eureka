@@ -56,7 +56,7 @@ pipeline{
             stage('deploy'){
              steps {
                 script{
-                    dockerDeploy().call()
+                    dockerDeploy('dev', '6761', '8761').call()
                     echo "deployed successfull in dev"
                 }
              }
@@ -65,12 +65,33 @@ pipeline{
 }
 
 
- def dockerDeploy( ){
+ def dockerDeploy(env, hostport, containerport ){
         return {
-                echo "${env.DOCKER_HUB}"
+                echo "**************Deploying app to $env Environment***************"
+                withCredentials([usernamePassword(credentialsId: 'docker_vm_maha_user', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                     script{
+                         sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
+                         try{
+                                // Stop the Container
+                            echo "Stoping the Container"
+                            sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker stop ${env.APPLICATION_NAME}-$env"
+
+                            // Remove the Container 
+                            echo "Removing the Container"
+                            sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker rm ${env.APPLICATION_NAME}-$env"
+
+                         } catch(err) {
+                                echo "Caught the Error: $err"
+                         }
+                         // Create a Container 
+                            echo "Creating the Container"
+                            sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker run -d -p $hostport:$containerport --name ${env.APPLICATION_NAME}-$env ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
+  
+
+                     }   
              }
         
-        
+        }
     }
  /*   
             stage(Deploy_to_dev){
