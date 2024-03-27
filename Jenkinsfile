@@ -2,6 +2,7 @@ pipeline{
     agent{
         label 'k8s-node'
     }
+    
     environment{
        APPLICATION_NAME= 'eureka'
        POM_VERSION= readMavenPom().getVersion()
@@ -50,6 +51,15 @@ pipeline{
                      docker push ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}
 
                      """ 
+                }
+            }
+            stage(Deploy_to_dev){
+                steps{
+                    echo "************** Deploying to Dev***************"
+                    withCredentials([usernamePassword(credentialsId: 'docker_vm_maha_user', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                            // some block
+                           sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} hostname-i"
+                    }
                 }
             }
         }
