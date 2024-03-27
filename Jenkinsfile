@@ -67,7 +67,7 @@ pipeline{
 
  def dockerDeploy( ){
         return {
-                echo "${env.APPLICATION_NAME}"
+                echo "${env.DOCKER_HUB}"
              }
         
         
