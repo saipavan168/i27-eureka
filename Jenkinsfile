@@ -16,7 +16,7 @@ pipeline{
         jdk 'java'
     }
         stages{
-            stage(maven){
+            stage('maven'){
                 steps{
                     script{
                         echo "hello"
@@ -29,17 +29,17 @@ pipeline{
                 }
               }
             }
-            stage(artifactorycheck){
+            stage('artifactorycheck'){
                 steps{
                     sh "ls /home/raksharoshni/jenkins/workspace/1project_master/target/*.jar"
                 }
             }
-            stage(check){
+            stage('check'){
                 steps{
                   echo " actual artifact: i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING}"
                 }
             }
-            stage(Dockerpush){
+            stage('Dockerpush'){
                 steps{
                    sh """
                      ls -la
@@ -53,8 +53,7 @@ pipeline{
                      """ 
                 }
             }
-
-            stage(deploy){
+            stage('deploy'){
              steps {
                 script{
                     dockerDeploy('dev','6761','8761').call()
@@ -66,14 +65,14 @@ pipeline{
 }
 
 
-    def dockerDeploy(env, hostport, containerport){
-        return{
+ def dockerDeploy(env, hostport, containerport){
+        return {
             echo "**************Deploying app to $env Environment***************"
                 withCredentials([usernamePassword(credentialsId: 'docker_vm_maha_user', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
               // some block
                 script {
                     // Pull the image on the Docker Server
-                    sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker pull docker.io/raksharoshni/${env.APPLICATION_NAME}:${GIT_COMMIT}"
+                    sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
                     
                     try {
                         // Stop the Container
