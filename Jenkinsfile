@@ -53,7 +53,9 @@ pipeline{
                      """ 
                 }
             }
-            stage(deploy){
+        }
+}
+     /*       stage(deploy){
                             echo "************** Deploying to Dev***************"
                 withCredentials([usernamePassword(credentialsId: 'docker_vm_maha_user', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                                         // some block
@@ -99,8 +101,8 @@ pipeline{
         }
 
 
-}
-
+} */
+/*
 def deploying(env,hostip){
     return{
      echo "************** Deploying to Dev***************"
@@ -125,3 +127,4 @@ def deploying(env,hostip){
          }
     }
 }
+*/
