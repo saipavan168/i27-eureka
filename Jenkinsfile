@@ -55,9 +55,11 @@ pipeline{
             }
 
             stage(deploy){
-             steps{
-                deployingtoenv('dev','6761','8761').call()
-                echo "deployed successfull in dev"
+             steps {
+                script{
+                    deployingtoenv('dev','6761','8761').call()
+                    echo "deployed successfull in dev"
+                }
              }
             }
      }
