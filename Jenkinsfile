@@ -56,8 +56,32 @@ pipeline{
             stage('deploy'){
              steps {
                 script{
-                    dockerDeploy('dev', '6761', '8761').call()
+                    dockerDeploy('dev', '5761', '8761').call()
                     echo "deployed successfull in dev"
+                }
+             }
+            }
+            stage('Test'){
+             steps {
+                script{
+                    dockerDeploy('Test', '6761', '8761').call()
+                    echo "deployed successfull in Test"
+                }
+             }
+            }
+            stage('Stage'){
+             steps {
+                script{
+                    dockerDeploy('Stage', '7761', '8761').call()
+                    echo "deployed successfull in Stage"
+                }
+             }
+            }
+            stage('Prod'){
+             steps {
+                script{
+                    dockerDeploy('Prod', '8761', '8761').call()
+                    echo "deployed successfull in Prod"
                 }
              }
             }
