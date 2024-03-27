@@ -55,7 +55,7 @@ pipeline{
             }
 
             stage(deploy){
-                
+             steps{
                 withCredentials([usernamePassword(credentialsId: 'docker_vm_maha_user', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                                         // some block
                 script{  
@@ -76,6 +76,7 @@ pipeline{
                         //Below loc is to run the jar file
                     }
                  }
+             }
             }
      }
 }
