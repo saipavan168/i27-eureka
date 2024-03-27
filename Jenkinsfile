@@ -53,10 +53,9 @@ pipeline{
                      """ 
                 }
             }
-        }
 
-           stage(deploy){
-                            echo "************** Deploying to Dev***************"
+            stage(deploy){
+                echo "************** Deploying to Dev***************"
                 withCredentials([usernamePassword(credentialsId: 'docker_vm_maha_user', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                                         // some block
                 script{  
@@ -77,6 +76,7 @@ pipeline{
                     }
                  }
             }
+     }
 }
  /*   
             stage(Deploy_to_dev){
