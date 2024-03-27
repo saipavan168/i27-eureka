@@ -75,7 +75,7 @@ pipeline{
                 }
             }            
         }
-}
+
 
 
 
@@ -101,4 +101,5 @@ def deploying(env,hostip){
            }
          }
     }
+}
 }
