@@ -85,20 +85,20 @@ def deploying(env,hostip){
      withCredentials([usernamePassword(credentialsId: 'docker_vm_maha_user', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                             // some block
       sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
-                        script{  
-                           try{
-                           //stop
-                           sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker stop ${env.APPLICATION_NAME}-$env"
-                           //remove
-                           sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker rm ${env.APPLICATION_NAME}-$env"
-                           }
-                           catch(err){
-                            echo " caught the err: $err"
-                           }
-                           //Below loc is to login and run the image 
-                           sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker run -d -p $hostip:8761 --name ${env.APPLICATION_NAME}-dev ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
-                           //Below loc is to run the jar file
-                        }
-     }
+      script{  
+        try{
+             //stop
+                sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker stop ${env.APPLICATION_NAME}-$env"
+            //remove
+                 sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker rm ${env.APPLICATION_NAME}-$env"
+          }
+        catch(err){
+             echo " caught the err: $err"
+          }
+         //Below loc is to login and run the image 
+             sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker run -d -p $hostip:8761 --name ${env.APPLICATION_NAME}-$env ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
+             //Below loc is to run the jar file
+           }
+         }
     }
 }
