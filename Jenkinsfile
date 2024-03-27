@@ -2,7 +2,15 @@ pipeline{
     agent{
         label 'k8s-node'
     }
-    
+    parameters{
+        choice(name:'mavenBuild', choices: ['no','yes'],description:'This will build')
+        choice(name:'artifactoryCheck', choices: ['no','yes'],description:'This will check the artifactory')
+        choice(name:'dockerPush', choices: ['no','yes'],description:'This will push the artifactory to dockerhub')
+        choice(name:'dev', choices: ['no','yes'],description:'This will deploy app to dev')
+        choice(name:'stage', choices: ['no','yes'],description:'This will deploy app to stage')
+        choice(name:'test', choices: ['no','yes'],description:'This will deploy app to test')
+        choice(name:'prod', choices: ['no','yes'],description:'This will deploy app to prod')
+    }
     environment{
        APPLICATION_NAME= 'eureka'
        POM_VERSION= readMavenPom().getVersion()
@@ -16,6 +24,16 @@ pipeline{
         jdk 'java'
     }
         stages{
+            when{
+                anyOf{
+                    params.mavenBuild=='yes'
+                    params.dockerPush=='yes'
+                    params.dev=='yes'
+                    params.stage=='yes'
+                    params.test=='yes'
+                    params.prod=='yes'
+                }
+            }
             stage('maven'){
                 steps{
                     script{
@@ -30,6 +48,9 @@ pipeline{
               }
             }
             stage('artifactorycheck'){
+                when{
+                    params.artifactoryCheck=='yes'
+                }
                 steps{
                     sh "ls /home/raksharoshni/jenkins/workspace/1project_master/target/*.jar"
                 }
@@ -40,6 +61,14 @@ pipeline{
                 }
             }
             stage('Dockerpush'){
+                when{
+                    params.mavenBuild=='yes'
+                    params.dockerPush=='yes'
+                    params.dev=='yes'
+                    params.stage=='yes'
+                    params.test=='yes'
+                    params.prod=='yes'
+                }
                 steps{
                    sh """
                      ls -la
@@ -53,7 +82,10 @@ pipeline{
                      """ 
                 }
             }
-            stage('deploy'){
+            stage('dev'){
+             when{
+                params.dev=='yes'
+             }
              steps {
                 script{
                     dockerDeploy('dev', '5761', '8761').call()
@@ -62,6 +94,9 @@ pipeline{
              }
             }
             stage('Test'){
+            when{
+                params.test=='yes'
+             }
              steps {
                 script{
                     dockerDeploy('Test', '6761', '8761').call()
@@ -70,6 +105,9 @@ pipeline{
              }
             }
             stage('Stage'){
+             when{
+                params.stage=='yes'
+             }
              steps {
                 script{
                     dockerDeploy('Stage', '7761', '8761').call()
@@ -78,6 +116,9 @@ pipeline{
              }
             }
             stage('Prod'){
+            when{
+                params.prod=='yes'
+             }
              steps {
                 script{
                     dockerDeploy('Prod', '8761', '8761').call()
