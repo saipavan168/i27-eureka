@@ -57,7 +57,7 @@ pipeline{
             stage(deploy){
              steps {
                 script{
-                    deployingtoenv('dev','6761','8761').call()
+                    dockerDeploy('dev','6761','8761').call()
                     echo "deployed successfull in dev"
                 }
              }
@@ -66,10 +66,9 @@ pipeline{
 }
 
 
-    def deployingtoenv(env,hostport,containerport){
+    def dockerDeploy(env, hostport, containerport){
         return{
             echo "**************Deploying app to $env Environment***************"
-            steps{
                 withCredentials([usernamePassword(credentialsId: 'docker_vm_maha_user', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
               // some block
                 script {
@@ -97,7 +96,7 @@ pipeline{
                  }
              }
         
-        }
+        
     }
  /*   
             stage(Deploy_to_dev){
