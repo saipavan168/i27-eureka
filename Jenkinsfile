@@ -24,17 +24,19 @@ pipeline{
         jdk 'java'
     }
         stages{
+            stage('maven'){
             when{
                 anyOf{
+                 expression {
                     params.mavenBuild=='yes'
                     params.dockerPush=='yes'
                     params.dev=='yes'
                     params.stage=='yes'
                     params.test=='yes'
                     params.prod=='yes'
+                 }
                 }
             }
-            stage('maven'){
                 steps{
                     script{
                         echo "hello"
@@ -49,7 +51,9 @@ pipeline{
             }
             stage('artifactorycheck'){
                 when{
+                    expression{
                     params.artifactoryCheck=='yes'
+                    }
                 }
                 steps{
                     sh "ls /home/raksharoshni/jenkins/workspace/1project_master/target/*.jar"
@@ -62,12 +66,14 @@ pipeline{
             }
             stage('Dockerpush'){
                 when{
+                    expression{
                     params.mavenBuild=='yes'
                     params.dockerPush=='yes'
                     params.dev=='yes'
                     params.stage=='yes'
                     params.test=='yes'
                     params.prod=='yes'
+                    }
                 }
                 steps{
                    sh """
@@ -84,7 +90,9 @@ pipeline{
             }
             stage('dev'){
              when{
+                expression{
                 params.dev=='yes'
+                }
              }
              steps {
                 script{
@@ -95,7 +103,9 @@ pipeline{
             }
             stage('Test'){
             when{
+                expression{
                 params.test=='yes'
+                }
              }
              steps {
                 script{
@@ -106,7 +116,9 @@ pipeline{
             }
             stage('Stage'){
              when{
+                expression{                    
                 params.stage=='yes'
+                }
              }
              steps {
                 script{
@@ -117,7 +129,9 @@ pipeline{
             }
             stage('Prod'){
             when{
+                expression{
                 params.prod=='yes'
+                }
              }
              steps {
                 script{
