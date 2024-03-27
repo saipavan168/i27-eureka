@@ -67,7 +67,7 @@ pipeline{
 def dockerDeploy(envDeploy, hostPort, contPort) {
     return {
     echo "******************************** Deploying to $envDeploy Environment ********************************"
-    withCredentials([usernamePassword(credentialsId: 'maha_docker_vm_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+    withCredentials([usernamePassword(credentialsId: 'docker_vm_maha_user', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
         // some block
         // With the help of this block, ,the slave will be connecting to docker-vm and execute the commands to create the containers.
         //sshpass -p ssh -o StrictHostKeyChecking=no user@host command_to_run
@@ -75,7 +75,7 @@ def dockerDeploy(envDeploy, hostPort, contPort) {
         
     script {
         // Pull the image on the Docker Server
-        sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_server_ip} docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
+        sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
         
         try {
             // Stop the Container
@@ -84,14 +84,14 @@ def dockerDeploy(envDeploy, hostPort, contPort) {
 
             // Remove the Container 
             echo "Removing the Container"
-            sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_server_ip} docker rm ${env.APPLICATION_NAME}-$envDeploy"
+            sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker rm ${env.APPLICATION_NAME}-$envDeploy"
              } catch(err) {
             echo "Caught the Error: $err"
         }
 
         // Create a Container 
         echo "Creating the Container"
-        sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_server_ip} docker run -d -p $hostPort:$contPort --name ${env.APPLICATION_NAME}-$envDeploy ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
+        sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker run -d -p $hostPort:$contPort --name ${env.APPLICATION_NAME}-$envDeploy ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
         }
     }
     }
