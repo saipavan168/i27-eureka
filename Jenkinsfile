@@ -55,17 +55,29 @@ pipeline{
             }
             stage(Deploy_to_dev){
                 steps{
+                   script{
                     deploying('dev','5761').call()
+                   }
+                }
             }
             stage(Deploy_to_Tst){
                 steps{
+                  script{
                    deploying('tst','6761').call()
+                  }
                 }
             }
+            stage(Deploy_to_Prod){
+                steps{
+                  script{
+                   deploying('tst','7761').call()
+                  }
+                }
+            }            
         }
-    }
-
 }
+
+
 
 def deploying(env,hostip){
     return{
