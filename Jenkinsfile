@@ -73,7 +73,7 @@ pipeline{
               // some block
                 script {
                     // Pull the image on the Docker Server
-                    sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
+                    sh "sshpass -p ${PASSWORD} -v ssh -o StrictHostKeyChecking=no ${USERNAME}@${docker_vm_ip} docker pull docker.io/raksharoshni/${env.APPLICATION_NAME}:${GIT_COMMIT}"
                     
                     try {
                         // Stop the Container
