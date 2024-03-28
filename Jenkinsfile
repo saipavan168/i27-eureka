@@ -60,7 +60,9 @@ pipeline{
                     }
                 }
                 steps{
+                    script{
                     dockerpush().call()
+                    }
                 }
             }
             stage('dev'){
