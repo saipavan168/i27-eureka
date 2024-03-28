@@ -131,6 +131,12 @@ pipeline{
              }
              steps {
                 script{
+                    timeout(time: 300, unit: 'SECONDS')
+                    input{
+                        message: "Deploying to prod "
+                        ok: "Yes, we should"
+                        submitter: "raksha"
+                    }
                     echo "*****************Entering into Prod*******************"
                     buildapp().call()
                     dockerpush().call()
