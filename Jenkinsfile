@@ -28,6 +28,7 @@ pipeline{
             when{
                 anyOf{
                  expression {
+
                     params.mavenBuild=='yes'
                     params.dockerPush=='yes'
                     params.dev=='yes'
@@ -139,6 +140,11 @@ pipeline{
                     echo "deployed successfull in Prod"
                 }
              }
+            }
+            stage('clean'){
+                steps{
+                    cleanWs()
+                }
             }
      }
 }
