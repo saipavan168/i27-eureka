@@ -119,7 +119,10 @@ pipeline{
                 //deploytoprod==true and branch == release/*
                 allOf{
                     anyOf{
-                        params.prod == 'yes'
+                        expression{
+                                params.prod == 'yes'
+                        }
+                        
                     }
                     anyOf{
                         branch 'release/*'
