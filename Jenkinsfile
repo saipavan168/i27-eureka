@@ -131,10 +131,10 @@ pipeline{
              }
              steps {
                 timeout(time: 300, unit: 'SECONDS'){
-                        input{
-                        message: "Deploying to prod "
-                        ok: "Yes, we should"
-                        submitter: "raksha"
+                  input {
+                        message "Deploying to prod "
+                        ok "Yes, we should"
+                        submitter "raksha"
                       }
                     }
                    
