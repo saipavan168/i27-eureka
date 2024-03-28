@@ -28,20 +28,13 @@ pipeline{
             when{
                 anyOf{
                  expression {
-
                     params.mavenBuild=='yes'
-                    params.dockerPush=='yes'
-                    params.dev=='yes'
-                    params.stage=='yes'
-                    params.test=='yes'
-                    params.prod=='yes'
                  }
                 }
             }
                 steps{
                     script{
-                        echo "*************Building the application**************"
-                        sh "mvn package"
+                        buildapp().call()
                     }
                 }
               post{
@@ -63,24 +56,11 @@ pipeline{
             stage('Dockerpush'){
                 when{
                     expression{
-                    params.mavenBuild=='yes'
                     params.dockerPush=='yes'
-                    params.dev=='yes'
-                    params.stage=='yes'
-                    params.test=='yes'
-                    params.prod=='yes'
                     }
                 }
                 steps{
-                    echo "**************Pushing Image to DOcker*****************"
-                   sh """
-                     cp ${workspace}/target/i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} ./.cicd
-                     docker build --force-rm --no-cache --pull --rm=true --build-arg JAR_SRC=i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} -t ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT} ./.cicd
-                     docker images
-                     docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}
-                     docker push ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}
-
-                     """ 
+                    dockerpush().call()
                 }
             }
             stage('dev'){
@@ -130,6 +110,8 @@ pipeline{
              }
              steps {
                 script{
+                    buildapp().call()
+                    dockerpush().call()
                     dockerDeploy('Prod', '8761', '8761').call()
                     echo "deployed successfull in Prod"
                 }
@@ -177,7 +159,25 @@ pipeline{
     
 }
 
+def buildapp(){
+    return{
+         echo "*************Building the application**************"
+         sh "mvn package"
+    }
+}
 
+def dockerpush(){
+    return{
+          echo "**************Pushing Image to DOcker*****************"
+           sh """
+             cp ${workspace}/target/i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} ./.cicd
+             docker build --force-rm --no-cache --pull --rm=true --build-arg JAR_SRC=i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} -t ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT} ./.cicd
+             docker images
+             docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}
+             docker push ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}
+             """ 
+    }
+}
 // cp /home/i27k8s10/jenkins/workspace/i27-Eureka_master/target/i27-eureka-0.0.1-SNAPSHOT.jar ./.cicd
 
 // workspace/target/i27-eureka-0.0.1-SNAPSHOT-jar
