@@ -24,7 +24,7 @@ pipeline{
         jdk 'java'
     }
         stages{
-            stage('maven'){
+            stage('maven-build'){
             when{
                 anyOf{
                  expression {
