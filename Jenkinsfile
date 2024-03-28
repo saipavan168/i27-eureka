@@ -40,7 +40,7 @@ pipeline{
             }
                 steps{
                     script{
-                        echo "Building the application"
+                        echo "*************Building the application**************"
                         sh "mvn package"
                     }
                 }
@@ -60,11 +60,6 @@ pipeline{
                     sh "ls /home/raksharoshni/jenkins/workspace/1project_master/target/*.jar"
                 }
             }
-            stage('check'){
-                steps{
-                  echo " actual artifact: i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING}"
-                }
-            }
             stage('Dockerpush'){
                 when{
                     expression{
@@ -77,10 +72,9 @@ pipeline{
                     }
                 }
                 steps{
+                    echo "**************Pushing Image to DOcker*****************"
                    sh """
-                     ls -la
-                     cp ${workspace}/target/i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} ./.cicd
-                     ls -la ./.cicd
+                    
                      docker build --force-rm --no-cache --pull --rm=true --build-arg JAR_SRC=i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} -t ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT} ./.cicd
                      docker images
                      docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}
