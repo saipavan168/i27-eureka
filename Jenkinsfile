@@ -116,8 +116,14 @@ pipeline{
             }
             stage('Prod'){
             when{
-                expression{
-                params.prod=='yes'
+                //deploytoprod==true and branch == release/*
+                allOf{
+                    anyOf{
+                        params.prod =='true'
+                    }
+                    anyOf{
+                        branch 'release/*'
+                    }
                 }
              }
              steps {
