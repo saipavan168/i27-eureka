@@ -61,6 +61,7 @@ pipeline{
                 }
                 steps{
                     script{
+                    buildapp().call()
                     dockerpush().call()
                     }
                 }
