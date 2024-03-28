@@ -31,7 +31,7 @@ pipeline{
                     params.mavenBuild=='yes'
                  }
                 }
-            }
+              }
                 steps{
                     script{
                         buildapp().call()
@@ -73,6 +73,9 @@ pipeline{
              }
              steps {
                 script{
+                    echo "*****************Entering into Dev*******************"
+                    buildapp().call()
+                    dockerpush().call()
                     dockerDeploy('dev', '5761', '8761').call()
                     echo "deployed successfull in dev"
                 }
@@ -86,6 +89,9 @@ pipeline{
              }
              steps {
                 script{
+                    echo "*****************Entering into Test*******************"
+                    buildapp().call()
+                    dockerpush().call()
                     dockerDeploy('Test', '6761', '8761').call()
                     echo "deployed successfull in Test"
                 }
@@ -99,6 +105,9 @@ pipeline{
              }
              steps {
                 script{
+                    echo "*****************Entering into Stage*******************"
+                    buildapp().call()
+                    dockerpush().call()
                     dockerDeploy('Stage', '7761', '8761').call()
                     echo "deployed successfull in Stage"
                 }
@@ -112,6 +121,7 @@ pipeline{
              }
              steps {
                 script{
+                    echo "*****************Entering into Prod*******************"
                     buildapp().call()
                     dockerpush().call()
                     dockerDeploy('Prod', '8761', '8761').call()
