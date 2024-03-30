@@ -124,9 +124,9 @@ pipeline{
                         }
                         
                     }
-                    anyOf{
+                  /*  anyOf{
                         branch 'release/*'
-                    }
+                    } */
                 }
              }
              steps {
