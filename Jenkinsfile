@@ -130,13 +130,9 @@ pipeline{
                 }
              }
              steps {
-                timeout(time: 300, unit: 'SECONDS'){
-                  input {
-                        message "Deploying to prod "
-                        ok "Yes, we should"
-                        submitter "raksha"
-                      }
-                    }
+                timeout(time: 300, unit: 'SECONDS') {
+                    input message: "Deploying ${env.APPLICATION_NAME} to prod ????", ok: 'yes', submitter: 'raksha'
+                }
                    
                 script{
                     
@@ -209,6 +205,15 @@ def dockerpush(){
              """ 
     }
 }
+
+
+
+
+
+
+
+
+
 // cp /home/i27k8s10/jenkins/workspace/i27-Eureka_master/target/i27-eureka-0.0.1-SNAPSHOT.jar ./.cicd
 
 // workspace/target/i27-eureka-0.0.1-SNAPSHOT-jar
