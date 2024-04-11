@@ -1,2 +1,4 @@
-@Library("com.i27-academy.slb@main") _
-Docker()
+@Library("com.i27academy.slb@main") _
+Docker(
+    appName: 'eureka'
+)
