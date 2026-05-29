@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: i27
+  description: Sample Java application
+spec:
+  type: service
+  lifecycle: production
+  owner: user:default/guest
