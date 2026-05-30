@@ -7,3 +7,31 @@ spec:
   type: service
   lifecycle: production
   owner: user:default/guest
+
+---
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+
+metadata:
+name: microservice-1
+description: Spring Boot Eureka Service
+
+annotations:
+github.com/project-slug: saipavan168/microservice-1
+backstage.io/techdocs-ref: dir:.
+
+tags:
+- java
+- springboot
+- docker
+
+links:
+- url: https://github.com/saipavan168/microservice-1
+title: Source Code
+icon: github
+
+spec:
+type: service
+lifecycle: experimental
+owner: guests
